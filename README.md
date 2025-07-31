@@ -26,7 +26,7 @@ Fazer uma API REST para atender operações básicas do controle de treinamento 
 ### Cursos
 
 #### Listagem de Cursos
-- ```@GetMapping("/curso/{id}")``` Recebe id do curso pela URL e retorna<br> 
+- ```@GetMapping("/curso")``` Recebe id do curso pela URL e retorna<br> 
 { "nome": String,<br> "descrição": String,<br> "duração": int };
 
 #### Inclusão de cursos

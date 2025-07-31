@@ -5,6 +5,8 @@ import com.eric.linkedrh.models.CursoModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.eric.linkedrh.dao.CursoDao;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class CursoService {
@@ -12,15 +14,31 @@ public class CursoService {
     @Autowired
     private CursoDao cursoDao;
 
-    public CursoDto getCursoById(Integer id){
-        CursoModel curso = cursoDao.findOneById(id);
-        if(curso == null){
-            throw new RuntimeException("Curso no encontrado");
+    public List<CursoDto> getCursos(){
+        try {
+            List<CursoModel> cursos = cursoDao.findAll();
+            if(cursos.isEmpty()){
+                throw new RuntimeException("Ainda não há cursos cadastrados");
+            }
+            return cursos.stream()
+                     .map(this::toDto)
+                     .collect(Collectors.toList());
+        } catch (RuntimeException e) {
+            throw new RuntimeException("Erro ao buscar cursos",e);
+        }   
+    }
+    public String createCurso(CursoDto curso){
+        try {
+            this.cursoDao.createCurso(curso);
+            return String.format("Curso %s cadastrado",curso.getNome());
+        } catch (RuntimeException e) {
+            throw new RuntimeException("Erro ao criar usuário");
         }
-        return toDto(curso);
     }
 
+    
+
     public CursoDto toDto(CursoModel curso){
-        return new CursoDto(curso.getId(),curso.getNome(),curso.getDescricao(),curso.getDuracao());
+        return new CursoDto(curso.getNome(),curso.getDescricao(),curso.getDuracao());
     }
 }
