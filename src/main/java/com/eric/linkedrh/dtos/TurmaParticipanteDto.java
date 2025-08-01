@@ -5,15 +5,12 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDate;
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
-public class TurmaDto {
-    private LocalDate inicio;
-    private LocalDate fim;
-    private String local;
-    private int curso;
-    private int participantes;
+public class TurmaParticipanteDto{
+    private int codigo;
+    private int turma;
+    private int funcionario;
 }

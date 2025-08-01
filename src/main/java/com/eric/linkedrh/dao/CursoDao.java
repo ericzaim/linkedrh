@@ -47,6 +47,7 @@ public class CursoDao {
 
     public void deleteCurso(int id){
         jdbcTemplate.update("DELETE FROM curso WHERE codigo = ?", id);
+        jdbcTemplate.update("DELETE FROM turmas WHERE curso = ?", id);
     }
 
 }

@@ -1,0 +1,19 @@
+-Curso -- OK
+    -CRUD normal -- OK
+    -Deve apagar turmas ligadas no delete -- OK
+
+-Turma
+    - CRUD -- OK
+        -Incluir participantes -- Verificar 
+        -Excluir participantes
+        -SELECT Baseada no curso, ordernar pelas datas inicio e fim -- OK
+        -Traz quantidade de participantes do curso na SELECT -- OK
+        -Listagem de participantes -- OK
+    -Não pode mudar o curso da turma após criada -- OK
+
+-Regras de Negócio
+    - Apagar Turmas ligadas ao curso quando curso for apagado -- OK
+    - Não pode mudar o curso da turma após criada. -- OK
+    - Não pode mover participante de turmas, mas pode Incluir e Exclui-los
+
+Implement Unitary Tests with JUnit

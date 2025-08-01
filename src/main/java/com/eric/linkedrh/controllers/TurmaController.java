@@ -18,19 +18,22 @@ public class TurmaController {
     public List<TurmaDto> cadastroTurma(@PathVariable int id){
         return this.turmaService.getTurmas(id);
     }
+
     @PostMapping("/turma/cadastro")
     public String cadastrarTurma(@PathVariable int id, @RequestBody TurmaDto turmaDto){
         this.turmaService.createTurma(id,turmaDto);
         return "Turma Cadastrado com sucesso";
     }
+
     @PatchMapping("/turma/{id_turma}/atualiza")
-    public String atualizaTurma(@PathVariable int id,@PathVariable int id_turma,@RequestBody TurmaDto turmaDto) {
-        this.turmaService.updateTurma(id, id_turma, turmaDto);
+    public String atualizaTurma(@PathVariable int id_turma,@RequestBody TurmaDto turmaDto) {
+        this.turmaService.updateTurma(id_turma, turmaDto);
         return "Turma Atualizado com sucesso";
     }
+    
     @DeleteMapping("/turma/{id_turma}/delete")
-    public String deletarTurma(@PathVariable int id,@PathVariable int id_turma) {
-        this.turmaService.deleteTurma(id,id_turma);
+    public String deletarTurma(@PathVariable int id_turma) {
+        this.turmaService.deleteTurma(id_turma);
         return "Turma Deletado com sucesso";
     }
 }
