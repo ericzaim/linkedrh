@@ -1,4 +1,4 @@
-package com.eric.linkedrh.models;
+package com.eric.linkedrh.dtos;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -11,13 +11,11 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @Getter
 @Setter
-public class FuncionarioModel {
-    private int codigo;
+public class FuncionarioDto {
     private String nome;
     private String cpf;
     private LocalDate nascimento;
     private String cargo;
     private LocalDate admissao;
     private int status;
-
 }

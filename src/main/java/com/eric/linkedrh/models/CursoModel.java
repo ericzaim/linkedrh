@@ -8,7 +8,7 @@ import lombok.*;
 @Getter
 @Setter
 public class CursoModel {
-    private int id;
+    private int codigo;
     private String nome;
     private String descricao;
     private int duracao;

@@ -10,7 +10,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class TurmaParticipanteModel {
-    private int id;
-    private int id_turma;
-    private int id_funcionario;
+    private int codigo;
+    private int turma;
+    private int funcionario;
 }

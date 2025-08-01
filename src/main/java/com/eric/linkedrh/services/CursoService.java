@@ -5,7 +5,11 @@ import com.eric.linkedrh.models.CursoModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.eric.linkedrh.dao.CursoDao;
+import org.springframework.web.bind.annotation.PathVariable;
+
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -27,6 +31,7 @@ public class CursoService {
             throw new RuntimeException("Erro ao buscar cursos",e);
         }   
     }
+
     public String createCurso(CursoDto curso){
         try {
             this.cursoDao.createCurso(curso);
@@ -36,6 +41,19 @@ public class CursoService {
         }
     }
 
+    public void updateCurso(CursoDto curso, int id){
+
+        Map<String, Object> update = new HashMap<>();
+
+        update.put("nome", curso.getNome());
+        update.put("descricao", curso.getDescricao());
+        update.put("duracao", curso.getDuracao());
+
+        this.cursoDao.updateCurso(id,update);
+    }
+    public  void deleteCurso(int id){
+        this.cursoDao.deleteCurso(id);
+    }
     
 
     public CursoDto toDto(CursoModel curso){

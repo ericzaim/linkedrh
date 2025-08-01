@@ -1,5 +1,4 @@
-package com.eric.linkedrh.models;
-
+package com.eric.linkedrh.dtos;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -12,8 +11,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @Getter
 @Setter
-public class TurmaModel {
-    private int codigo;
+public class TurmaDto {
     private LocalDate inicio;
     private LocalDate fim;
     private String local;

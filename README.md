@@ -35,13 +35,13 @@ Fazer uma API REST para atender operações básicas do controle de treinamento 
 #### Atualização de cursos
 - ```@PatchMapping("/curso/atualiza/{id}"``` Recebe pela URL o id do curso, e no corpo da requisição, <br> { "nome": String || null,<br> "descrição": String || null, <br>"duração": int || null };
 
-#### Exclusão de turmas
+#### Exclusão de Cursos
 - ```@DeleteMapping("/curso/delete/{id}")``` Recebe pela URL o id do curso e deleta o curso.
 
 ### Turmas
 
 #### Busca de turmas por curso,
-- ```@GetMapping("/curso/{id}/turma/{id_turma}")``` Recebe id do curso, e da turma, pela URL e retorna<br>
+- ```@GetMapping("/curso/{id}/turma/")``` Recebe id do curso, pela URL e retorna uma lista com objetos da seguinte maneira,<br>
   { "curso":String,<br> "local":String,<br> "inicio":LocalDate,<br> "fim":LocalDate };
 
 #### Inclusão de turmas
@@ -53,16 +53,16 @@ Fazer uma API REST para atender operações básicas do controle de treinamento 
 #### Exclusão de turmas
 - ```@DeleteMapping("/curso/{id}/turma/{id_turma}/delete")``` Recebe pela URL o id do curso e da turma, e deleta a turma do curso indicado.
 
-### Alunos
+### Funcionarios
 #### Listagem de Participantes
-- ```@GetMapping("/curso/{id}/turma/{id_turma}/aluno")``` Recebe id do curso, e da turma, pela URL e retorna uma lista com os participantes<br>
+- ```@GetMapping("/curso/{id}/turma/{id_turma}/alunos")``` Recebe id do curso, e da turma, pela URL e retorna uma lista com os participantes<br>
   { "nome":String,<br> "cpf":String,<br> "nascimento":LocalDate,<br> "cargo":String,<br>"admiss":LocalDate,<br>"status": int };
 
 #### Criação de Participantes
-- ```@PostMapping(/curso/{id}/turma/{id_turma{id_turma}/aluno/cadastro)``` Recebe id do curso e id da turma, pela URL, e no corpo da requisição <br>{ "nome":String,<br> "cpf":String,<br> "nascimento":LocalDate,<br> "cargo":String,<br>"admiss":LocalDate,<br>"status": int }, e cadastra o participante na turma do curso indicado;
+- ```@PostMapping(/curso/{id}/turma/{id_turma{id_turma}/alunos/cadastro)``` Recebe id do curso e id da turma, pela URL, e no corpo da requisição <br>{ "nome":String,<br> "cpf":String,<br> "nascimento":LocalDate,<br> "cargo":String,<br>"admiss":LocalDate,<br>"status": int }, e cadastra o participante na turma do curso indicado;
 
 #### Exclusão de Participantes
-- ```@DeleteMapping("/curso/{id}/turma/{id_turma}/aluno/{id_aluno}/delete")``` Recebe pela URL o id do curso e da turma, e deleta a turma do curso indicado.
+- ```@DeleteMapping("/curso/{id}/turma/{id_turma}/alunos/{id_aluno}/delete")``` Recebe pela URL o id do curso e da turma, e deleta a turma do curso indicado.
 
 ## Models
 ### Curso

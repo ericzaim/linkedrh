@@ -19,30 +19,34 @@ public class CursoDao {
     private JdbcTemplate jdbcTemplate;
 
     public List<CursoModel> findAll() {
-         String sql =  String.format("SELECT * FROM cursos");
+         String sql =  "SELECT * FROM curso";
          return jdbcTemplate.query(sql,new BeanPropertyRowMapper<CursoModel>(CursoModel.class));
     }
 
     public void createCurso(CursoDto curso) {
-        String sql = String.format("INSERT INTO cursos (nome, descricao,duracao) VALUES (%s,%s,%d)",curso.getNome(),curso.getDescricao(),curso.getDuracao());
-        jdbcTemplate.update(sql);
+        String sql = "INSERT INTO curso (nome, descricao,duracao) VALUES (?,?,?)";
+        jdbcTemplate.update(sql, curso.getNome(), curso.getDescricao(), curso.getDuracao());
     }
 
     public void updateCurso(int id, Map<String, Object> updates){
-        StringBuilder sql =  new StringBuilder("UPDATE cursos SET ");
+        StringBuilder sql =  new StringBuilder("UPDATE curso SET ");
         List<Object> params = new ArrayList<>();
         
         updates.forEach((key,value)-> {
             sql.append(key).append(" = ?, ");
             params.add(value);
-    });
+        });
 
+        //Diminui o tamanho da String da consulta em 2, ou seja o " " e a ","
         sql.setLength(sql.length()- 2);
-        sql.append("WHERE id = ?");
+        sql.append("WHERE codigo = ?");
         params.add(id);
         
         jdbcTemplate.update(sql.toString(),params.toArray());
     }
 
-    
+    public void deleteCurso(int id){
+        jdbcTemplate.update("DELETE FROM curso WHERE codigo = ?", id);
+    }
+
 }
