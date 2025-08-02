@@ -1,3 +1,5 @@
+========================================== DONE ==========================================
+
 -Curso -- OK
     -CRUD normal -- OK
     -Deve apagar turmas ligadas no delete -- OK
@@ -16,4 +18,8 @@
     - Não pode mudar o curso da turma após criada. -- OK
     - Não pode mover participante de turmas, mas pode Incluir e Exclui-los -- OK
 
-Implement Unitary Tests with JUnit
+========================================== TO DO ==========================================
+
+-Tratar erros e edge cases
+
+-Implement Unitary Tests with JUnit

@@ -12,26 +12,38 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+/**
+ * Serviço responsável pela lógica de negócio relacionada às Turmas.
+ * Fornece métodos para buscar turmas, buscar funcionários por turma,
+ * incluir e excluir participantes, criar, atualizar e deletar turmas,
+ * além de converter FuncionarioModel para FuncionarioDto.
+ */
 @Service
 public class TurmaService {
 
     @Autowired
     private TurmaDao turmaDao;
-    
+
+    /**
+     * Retorna a lista de turmas associadas a um curso específico.
+     *
+     * @param id_curso Identificador do curso
+     * @return Lista de TurmaDto
+     * @throws RuntimeException caso não haja turmas cadastradas para o curso ou erro na busca
+     */
     public List<TurmaDto> getTurmas(int id_curso){
-        try {
             List<TurmaDto> turma = turmaDao.findTurmaByCurso(id_curso);
-            if(turma.isEmpty()){
-                throw new RuntimeException("Ainda não há Turmas cadastrados para esse turma");
-            }
-            
             return turma;
-        } catch (RuntimeException e) {
-            throw new RuntimeException("Erro ao buscar turma",e);
-        }
     }
+
+    /**
+     * Retorna a lista de funcionários associados a uma turma específica.
+     *
+     * @param id_turma Identificador da turma
+     * @return Lista de FuncionarioDto
+     * @throws RuntimeException caso não haja funcionários cadastrados para a turma ou erro na busca
+     */
     public List<FuncionarioDto> getFuncionariosByTurma(int id_turma){
-        try {
             List<FuncionarioModel> funcionario = turmaDao.findByTurma(id_turma);
             if(funcionario.isEmpty()){
                 throw new RuntimeException("Ainda não há Funcionarios cadastrados para esse funcionario");
@@ -39,11 +51,15 @@ public class TurmaService {
             return funcionario.stream()
                     .map(this::toDto)
                     .collect(Collectors.toList());
-        } catch (RuntimeException e) {
-            throw new RuntimeException("Erro ao buscar funcionarios ",e);
-        }
     }
 
+    /**
+     * Inclui um participante (aluno) em uma turma.
+     *
+     * @param id Identificador do participante (aluno)
+     * @param id_turma Identificador da turma
+     * @throws RuntimeException em caso de erro ao incluir o aluno
+     */
     public void incluirAluno(int id,int id_turma){
         try {
             this.turmaDao.adicionarParticipantes(id,id_turma);
@@ -51,6 +67,14 @@ public class TurmaService {
             throw new RuntimeException("Erro ao incluir aluno ",e);
         }
     }
+
+    /**
+     * Remove um participante (aluno) de uma turma.
+     *
+     * @param id Identificador do participante (aluno)
+     * @param id_turma Identificador da turma
+     * @throws RuntimeException em caso de erro ao excluir o aluno
+     */
     public void excluirAluno(int id,int id_turma){
         try{
             this.turmaDao.removerParticipantes(id,id_turma);
@@ -59,6 +83,13 @@ public class TurmaService {
         }
     }
 
+    /**
+     * Cria uma nova turma associada a um curso.
+     *
+     * @param id_curso Identificador do curso
+     * @param turma Dados da turma a ser criada
+     * @throws RuntimeException em caso de erro na criação da turma
+     */
     public void createTurma(int id_curso,TurmaDto turma){
         try {
             this.turmaDao.createTurma(id_curso,turma);
@@ -67,24 +98,49 @@ public class TurmaService {
         }
     }
 
+    /**
+     * Atualiza os dados de uma turma existente.
+     *
+     * @param id_turma Identificador da turma a ser atualizada
+     * @param turma Dados atualizados da turma
+     * @throws RuntimeException em caso de erro na atualização
+     */
     public void updateTurma(int id_turma,TurmaDto turma){
-
         Map<String, Object> update = new HashMap<>();
-
-        update.put("inicio", turma.getInicio());
-        update.put("fim", turma.getFim());
-        update.put("local", turma.getLocal());
+        if (turma.getInicio() != null){
+            update.put("inicio", turma.getInicio());
+        }
+        if (turma.getFim() != null){
+            update.put("fim", turma.getFim());
+        }
+        if (turma.getLocal() != null) {
+            update.put("local", turma.getLocal());
+        }
         try{
             this.turmaDao.updateTurma(id_turma,update);
         }catch (Exception e){
             throw new RuntimeException("Erro ao atualizar turma",e);
         }
     }
-    public  void deleteTurma(int id_turma) {
+
+    /**
+     * Deleta uma turma existente.
+     *
+     * @param id_turma Identificador da turma a ser deletada
+     */
+    public void deleteTurma(int id_turma) {
         this.turmaDao.deleteTurma(id_turma);
     }
 
+    /**
+     * Converte um objeto FuncionarioModel para FuncionarioDto.
+     *
+     * @param funcionario FuncionarioModel a ser convertido
+     * @return Objeto FuncionarioDto com dados convertidos
+     */
     public FuncionarioDto toDto(FuncionarioModel funcionario){
         return new FuncionarioDto(funcionario.getNome(),funcionario.getCpf(),funcionario.getNascimento(),funcionario.getCargo(),funcionario.getAdmissao(),funcionario.getStatus());
     }
 }
+
+
