@@ -7,7 +7,7 @@ Fazer uma API REST para atender operações básicas do controle de treinamento 
 
 - ***[Tecnologias](#tecnologias)***
 - ***[Endpoints](#endpoints)***
-- ***[Models](#entidades)***
+- ***[Models](#models)***
 - ***[Dtos](#dtos)***
 - ***[Serviços](#servicos)***
 - ***[Tabelas](#tabelas)***

@@ -1,6 +1,7 @@
 package com.eric.linkedrh.dao;
 
 import com.eric.linkedrh.dtos.TurmaDto;
+import com.eric.linkedrh.models.FuncionarioModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -13,8 +14,7 @@ import java.util.Map;
 @Repository
 public class TurmaDao {
 
-    @Autowired
-    private JdbcTemplate jdbcTemplate;
+   private JdbcTemplate jdbcTemplate;
 
     public List<TurmaDto> findTurmaByCurso(int id_curso){
         String  sql ="SELECT "+
@@ -29,6 +29,11 @@ public class TurmaDao {
                     "GROUP BY t.codigo, t.inicio, t.fim, t.local, t.curso "+
                     "ORDER BY t.inicio,t.fim";
         return jdbcTemplate.query(sql,new BeanPropertyRowMapper<>(TurmaDto.class), id_curso);
+    }
+
+    public List<FuncionarioModel> findByTurma(int id_turma){
+        String  sql = "SELECT f.* FROM funcionario f INNER JOIN turma_participante tp ON f.codigo = tp.funcionario WHERE tp.turma = 7 ORDER BY nome";
+        return jdbcTemplate.query(sql,new BeanPropertyRowMapper<>(FuncionarioModel.class), id_turma);
     }
 
     public void createTurma(int id_curso,TurmaDto turma) {
@@ -47,7 +52,7 @@ public class TurmaDao {
 
  //Diminui o tamanho da String da consulta em 2, ou seja o " " e a ","
         sql.setLength(sql.length()- 2);
-        sql.append("WHERE codigo = ?");
+        sql.append(" WHERE codigo = ?");
         params.add(id_turma);
 
         jdbcTemplate.update(sql.toString(),params.toArray());
@@ -57,10 +62,15 @@ public class TurmaDao {
         String sql = "INSERT INTO turma_participante (turma, funcionario) VALUES (?,?)";
         jdbcTemplate.update(sql, id_turma, id_funcionario);
     }
+    public void removerParticipantes(int id_funcionario,int id_turma){
+        String sql = "DELETE FROM turma_participante WHERE turma = ? AND funcionario = ?";
+        jdbcTemplate.update(sql, id_turma, id_funcionario);
+    }
+
 
     public void deleteTurma(int id_turma) {
-        String sql = "DELETE FROM turma WHERE codigo = ?";
-        jdbcTemplate.update(sql,id_turma);
+        jdbcTemplate.update("DELETE FROM turma_participante WHERE turma = ?",id_turma);
+        jdbcTemplate.update("DELETE FROM turma WHERE codigo = ?" ,id_turma);
     }
 
 

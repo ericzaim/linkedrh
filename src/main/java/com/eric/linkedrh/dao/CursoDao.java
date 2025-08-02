@@ -20,7 +20,7 @@ public class CursoDao {
 
     public List<CursoModel> findAll() {
          String sql =  "SELECT * FROM curso";
-         return jdbcTemplate.query(sql,new BeanPropertyRowMapper<CursoModel>(CursoModel.class));
+         return jdbcTemplate.query(sql,new BeanPropertyRowMapper<>(CursoModel.class));
     }
 
     public void createCurso(CursoDto curso) {
@@ -39,7 +39,7 @@ public class CursoDao {
 
         //Diminui o tamanho da String da consulta em 2, ou seja o " " e a ","
         sql.setLength(sql.length()- 2);
-        sql.append("WHERE codigo = ?");
+        sql.append(" WHERE codigo = ?");
         params.add(id);
         
         jdbcTemplate.update(sql.toString(),params.toArray());
