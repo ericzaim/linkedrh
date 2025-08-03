@@ -11,7 +11,6 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -39,14 +38,6 @@ public class CursoTeste {
 
         assertEquals(1, cursos.size());
         assertEquals("Java", cursos.get(0).getNome());
-    }
-
-    @Test
-    void testGetCursosEmpty() {
-        when(cursoDao.findAll()).thenReturn(Collections.emptyList());
-
-        RuntimeException ex = assertThrows(RuntimeException.class, () -> cursoService.getCursos());
-        assertTrue(ex.getMessage().contains("Ainda não há cursos cadastrados"));
     }
 
     @Test

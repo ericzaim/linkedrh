@@ -66,13 +66,15 @@ public class CursoDao {
     }
 
     /**
-     * Remove um curso do banco de dados, bem como as turmas relacionadas a ele.
+     * Remove um curso do banco de dados, bem como as turmas e participantes relacionadas a ele.
      *
      * @param id Identificador do curso a ser removido.
      */
     public void deleteCurso(int id){
+        jdbcTemplate.update("DELETE FROM turma_participante "+
+                                "WHERE turma IN (SELECT codigo FROM turma WHERE curso = ?)", id);
+        jdbcTemplate.update("DELETE FROM turma WHERE curso = ?", id);
         jdbcTemplate.update("DELETE FROM curso WHERE codigo = ?", id);
-        jdbcTemplate.update("DELETE FROM turmas WHERE curso = ?", id);
     }
 
 }

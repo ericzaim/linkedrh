@@ -18,6 +18,6 @@ public class FuncionarioModel {
     private LocalDate nascimento;
     private String cargo;
     private LocalDate admissao;
-    private int status;
+    private boolean status;
 
 }

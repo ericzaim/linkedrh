@@ -1,12 +1,16 @@
 package com.eric.linkedrh.dao;
 
 import com.eric.linkedrh.dtos.TurmaDto;
+import com.eric.linkedrh.dtos.TurmaPostDto;
 import com.eric.linkedrh.models.FuncionarioModel;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cglib.core.Local;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
+import java.sql.Date;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -45,12 +49,13 @@ public class TurmaDao {
     /**
      * Busca a lista de funcionários participantes de uma turma específica.
      *
-     * @param id_turma Identificador da turma.
+     * @param inicio Data de inicio da turma.
+     * @param fim Data de fim da turma.
      * @return Lista de objetos FuncionarioModel correspondentes aos participantes.
      */
-    public List<FuncionarioModel> findByTurma(int id_turma){
-        String  sql = "SELECT f.* FROM funcionario f INNER JOIN turma_participante tp ON f.codigo = tp.funcionario WHERE tp.turma = ? ORDER BY nome";
-        return jdbcTemplate.query(sql,new BeanPropertyRowMapper<>(FuncionarioModel.class), id_turma);
+    public List<FuncionarioModel> findByTurma(LocalDate inicio, LocalDate fim){
+        String  sql = "SELECT f.* FROM funcionario f JOIN turma_participante tp ON f.codigo = tp.funcionario JOIN turma t ON tp.turma = t.codigo WHERE t.inicio = ? AND t.fim = ? ORDER BY f.nome";
+        return jdbcTemplate.query(sql,new BeanPropertyRowMapper<>(FuncionarioModel.class),inicio,fim);
     }
 
     /**
@@ -59,7 +64,7 @@ public class TurmaDao {
      * @param id_curso Identificador do curso ao qual a turma pertence.
      * @param turma Objeto TurmaDto com os dados da turma.
      */
-    public void createTurma(int id_curso,TurmaDto turma) {
+    public void createTurma(int id_curso, TurmaPostDto turma) {
         String sql = "INSERT INTO turma (inicio, fim, local,curso) VALUES (?,?,?,?)";
         jdbcTemplate.update(sql, turma.getInicio(), turma.getFim(), turma.getLocal(),id_curso);
     }
@@ -93,7 +98,7 @@ public class TurmaDao {
      * @param id_funcionario Identificador do funcionário a ser adicionado.
      * @param id_turma Identificador da turma.
      */
-    public void adicionarParticipantes(int id_funcionario,int id_turma){
+    public void adicionarParticipantes(int id_turma,int id_funcionario){
         String sql = "INSERT INTO turma_participante (turma, funcionario) VALUES (?,?)";
         jdbcTemplate.update(sql, id_turma, id_funcionario);
     }

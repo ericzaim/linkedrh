@@ -3,10 +3,13 @@ package com.eric.linkedrh.services;
 import com.eric.linkedrh.dao.TurmaDao;
 import com.eric.linkedrh.dtos.FuncionarioDto;
 import com.eric.linkedrh.dtos.TurmaDto;
+import com.eric.linkedrh.dtos.TurmaPostDto;
 import com.eric.linkedrh.models.FuncionarioModel;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,30 +42,31 @@ public class TurmaService {
     /**
      * Retorna a lista de funcionários associados a uma turma específica.
      *
-     * @param id_turma Identificador da turma
+     * @param inicio Data de inicio da turma
+     * @param fim Data de fim da turma
      * @return Lista de FuncionarioDto
      * @throws RuntimeException caso não haja funcionários cadastrados para a turma ou erro na busca
      */
-    public List<FuncionarioDto> getFuncionariosByTurma(int id_turma){
-            List<FuncionarioModel> funcionario = turmaDao.findByTurma(id_turma);
-            if(funcionario.isEmpty()){
-                throw new RuntimeException("Ainda não há Funcionarios cadastrados para esse funcionario");
-            }
-            return funcionario.stream()
-                    .map(this::toDto)
-                    .collect(Collectors.toList());
+    public List<FuncionarioDto> getFuncionariosByTurma(LocalDate inicio, LocalDate fim){
+        List<FuncionarioModel> funcionario = turmaDao.findByTurma(inicio, fim);
+        if(funcionario.isEmpty()){
+            throw new RuntimeException("Ainda não há Funcionarios cadastrados para essa turma");
+        }
+        return funcionario.stream()
+                .map(this::toDto)
+                .collect(Collectors.toList());
     }
 
     /**
      * Inclui um participante (aluno) em uma turma.
      *
-     * @param id Identificador do participante (aluno)
      * @param id_turma Identificador da turma
+     * @param id_funcionario Identificador do participante (aluno)
      * @throws RuntimeException em caso de erro ao incluir o aluno
      */
-    public void incluirAluno(int id,int id_turma){
+    public void incluirAluno(int id_turma,int id_funcionario){
         try {
-            this.turmaDao.adicionarParticipantes(id,id_turma);
+            this.turmaDao.adicionarParticipantes(id_turma,id_funcionario);
         }catch (RuntimeException e){
             throw new RuntimeException("Erro ao incluir aluno ",e);
         }
@@ -90,7 +94,7 @@ public class TurmaService {
      * @param turma Dados da turma a ser criada
      * @throws RuntimeException em caso de erro na criação da turma
      */
-    public void createTurma(int id_curso,TurmaDto turma){
+    public void createTurma(int id_curso, TurmaPostDto turma){
         try {
             this.turmaDao.createTurma(id_curso,turma);
         } catch (RuntimeException e) {
@@ -105,7 +109,7 @@ public class TurmaService {
      * @param turma Dados atualizados da turma
      * @throws RuntimeException em caso de erro na atualização
      */
-    public void updateTurma(int id_turma,TurmaDto turma){
+    public void updateTurma(int id_turma,TurmaPostDto turma){
         Map<String, Object> update = new HashMap<>();
         if (turma.getInicio() != null){
             update.put("inicio", turma.getInicio());
@@ -139,7 +143,7 @@ public class TurmaService {
      * @return Objeto FuncionarioDto com dados convertidos
      */
     public FuncionarioDto toDto(FuncionarioModel funcionario){
-        return new FuncionarioDto(funcionario.getNome(),funcionario.getCpf(),funcionario.getNascimento(),funcionario.getCargo(),funcionario.getAdmissao(),funcionario.getStatus());
+        return new FuncionarioDto(funcionario.getNome(),funcionario.getCpf(),funcionario.getNascimento(),funcionario.getCargo(),funcionario.getAdmissao(),funcionario.isStatus());
     }
 }
 

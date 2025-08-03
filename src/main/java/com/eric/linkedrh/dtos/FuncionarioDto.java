@@ -17,5 +17,5 @@ public class FuncionarioDto {
     private LocalDate nascimento;
     private String cargo;
     private LocalDate admissao;
-    private int status;
+    private boolean status;
 }
