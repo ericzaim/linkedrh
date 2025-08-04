@@ -6,7 +6,6 @@ import com.eric.linkedrh.dtos.TurmaDto;
 import com.eric.linkedrh.dtos.TurmaPostDto;
 import com.eric.linkedrh.models.FuncionarioModel;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cglib.core.Local;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -35,8 +34,12 @@ public class TurmaService {
      * @throws RuntimeException caso não haja turmas cadastradas para o curso ou erro na busca
      */
     public List<TurmaDto> getTurmas(int id_curso){
-            List<TurmaDto> turma = turmaDao.findTurmaByCurso(id_curso);
-            return turma;
+        try{
+            return turmaDao.findTurmaByCurso(id_curso);
+
+        }catch(RuntimeException e){
+            throw new RuntimeException("Não foi possível encontrar curso: " + id_curso + e);
+        }
     }
 
     /**
@@ -47,14 +50,20 @@ public class TurmaService {
      * @return Lista de FuncionarioDto
      * @throws RuntimeException caso não haja funcionários cadastrados para a turma ou erro na busca
      */
-    public List<FuncionarioDto> getFuncionariosByTurma(LocalDate inicio, LocalDate fim){
-        List<FuncionarioModel> funcionario = turmaDao.findByTurma(inicio, fim);
-        if(funcionario.isEmpty()){
-            throw new RuntimeException("Ainda não há Funcionarios cadastrados para essa turma");
+    public List<FuncionarioDto> getFuncionariosByTurma(int id_curso,LocalDate inicio, LocalDate fim){
+        try{
+            List<FuncionarioModel> funcionario = turmaDao.findByTurma(id_curso,inicio, fim);
+
+            if(funcionario.isEmpty()){
+                throw new RuntimeException("Ainda não há Funcionarios cadastrados para essa turma");
+            }
+            return funcionario.stream()
+                    .map(this::toDto)
+                    .collect(Collectors.toList());
+
+        }catch(InternalError e){
+            throw new InternalError("Erro ao buscar funcionarios ", e);
         }
-        return funcionario.stream()
-                .map(this::toDto)
-                .collect(Collectors.toList());
     }
 
     /**
@@ -133,7 +142,11 @@ public class TurmaService {
      * @param id_turma Identificador da turma a ser deletada
      */
     public void deleteTurma(int id_turma) {
-        this.turmaDao.deleteTurma(id_turma);
+        try {
+            this.turmaDao.deleteTurma(id_turma);
+        }catch (RuntimeException e){
+            throw new RuntimeException("Erro ao deletar turma",e);
+        }
     }
 
     /**
@@ -146,5 +159,3 @@ public class TurmaService {
         return new FuncionarioDto(funcionario.getNome(),funcionario.getCpf(),funcionario.getNascimento(),funcionario.getCargo(),funcionario.getAdmissao(),funcionario.isStatus());
     }
 }
-
-

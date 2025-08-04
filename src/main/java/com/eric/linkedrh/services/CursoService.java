@@ -90,7 +90,11 @@ public class CursoService {
      * @param id Identificador do curso a ser deletado
      */
     public void deleteCurso(int id){
+        try{
             this.cursoDao.deleteCurso(id);
+        }catch (RuntimeException e){
+            throw new RuntimeException("Erro ao deletar curso",e);
+        }
     }
 
     /**

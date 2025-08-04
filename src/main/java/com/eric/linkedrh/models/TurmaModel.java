@@ -1,6 +1,5 @@
 package com.eric.linkedrh.models;
 
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,5 +16,6 @@ public class TurmaModel {
     private LocalDate inicio;
     private LocalDate fim;
     private String local;
-    private int curso;
+    private int Curso;
+
 }

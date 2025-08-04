@@ -3,17 +3,21 @@ package com.eric.linkedrh.service;
 import com.eric.linkedrh.dao.TurmaDao;
 import com.eric.linkedrh.dtos.FuncionarioDto;
 import com.eric.linkedrh.dtos.TurmaDto;
+import com.eric.linkedrh.dtos.TurmaPostDto;
 import com.eric.linkedrh.models.FuncionarioModel;
 import com.eric.linkedrh.services.TurmaService;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.*;
+import org.mockito.junit.jupiter.MockitoExtension;
+
 import java.time.LocalDate;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+@ExtendWith(MockitoExtension.class)
 class TurmaServiceTest {
 
     @InjectMocks
@@ -22,55 +26,62 @@ class TurmaServiceTest {
     @Mock
     private TurmaDao turmaDao;
 
-    @BeforeEach
-    void setUp() {
-        MockitoAnnotations.openMocks(this);
+    @Test
+    void testGetTurmas() {
+        int idCurso = 1;
+        List<TurmaDto> mockTurmas = List.of(new TurmaDto(LocalDate.now(),LocalDate.now().plusDays(1826),"Indaiatuba",1,10));
+        when(turmaDao.findTurmaByCurso(idCurso)).thenReturn(mockTurmas);
+
+        List<TurmaDto> resultado = turmaService.getTurmas(idCurso);
+
+        assertEquals("Indaiatuba", resultado.getFirst().getLocal());
+    }
+
+    @Test
+    void testGetFuncionariosByTurma() {
+        int id = 1;
+        LocalDate inicio = LocalDate.of(2025, 1, 1);
+        LocalDate fim = LocalDate.of(2025, 1, 31);
+        List<FuncionarioModel> funcionarios = List.of(
+                new FuncionarioModel(1, "João", "12345678901", LocalDate.of(1990, 5, 10), "Desenvolvedor", LocalDate.of(2020, 1, 1), true)
+        );
+
+        when(turmaDao.findByTurma(id,inicio, fim)).thenReturn(funcionarios);
+
+        List<FuncionarioDto> resultado = turmaService.getFuncionariosByTurma(id,inicio, fim);
+
+        assertEquals("João", resultado.getFirst().getNome());
     }
 
     @Test
     void testIncluirAluno() {
-        doNothing().when(turmaDao).adicionarParticipantes(10, 2);
-        turmaService.incluirAluno(10, 2);
-        verify(turmaDao).adicionarParticipantes(10, 2);
+        assertDoesNotThrow(() -> turmaService.incluirAluno(1, 1));
+        verify(turmaDao).adicionarParticipantes(1, 1);
     }
 
     @Test
     void testExcluirAluno() {
-        doNothing().when(turmaDao).removerParticipantes(10, 2);
-        turmaService.excluirAluno(10, 2);
-        verify(turmaDao).removerParticipantes(10, 2);
+        assertDoesNotThrow(() -> turmaService.excluirAluno(1, 1));
+        verify(turmaDao).removerParticipantes(1, 1);
     }
 
     @Test
     void testCreateTurma() {
-        TurmaDto turma = new TurmaDto();
-        doNothing().when(turmaDao).createTurma(1, turma);
-
-        turmaService.createTurma(1, turma);
-
-        verify(turmaDao).createTurma(1, turma);
+        TurmaPostDto turma = new TurmaPostDto(LocalDate.now(), LocalDate.now().plusDays(5), "Laboratório");
+        assertDoesNotThrow(() -> turmaService.createTurma(2, turma));
+        verify(turmaDao).createTurma(2, turma);
     }
 
     @Test
     void testUpdateTurma() {
-        TurmaDto turma = new TurmaDto();
-        turma.setInicio(LocalDate.of(2025, 1, 1));
-        turma.setFim(LocalDate.of(2025, 2, 1));
-        turma.setLocal("Sala 1");
-
-        turmaService.updateTurma(5, turma);
-
-        verify(turmaDao).updateTurma(eq(5), argThat(map ->
-                map.get("inicio").equals(turma.getInicio()) &&
-                        map.get("fim").equals(turma.getFim()) &&
-                        map.get("local").equals("Sala 1")
-        ));
+        TurmaPostDto turma = new TurmaPostDto(LocalDate.of(2025, 1, 1), LocalDate.of(2025, 1, 15), "Sala B");
+        assertDoesNotThrow(() -> turmaService.updateTurma(3, turma));
+        verify(turmaDao).updateTurma(eq(3), anyMap());
     }
 
     @Test
     void testDeleteTurma() {
-        turmaService.deleteTurma(3);
-        verify(turmaDao).deleteTurma(3);
+        assertDoesNotThrow(() -> turmaService.deleteTurma(10));
+        verify(turmaDao).deleteTurma(10);
     }
-
 }

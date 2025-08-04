@@ -4,12 +4,10 @@ import com.eric.linkedrh.dtos.TurmaDto;
 import com.eric.linkedrh.dtos.TurmaPostDto;
 import com.eric.linkedrh.models.FuncionarioModel;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.cglib.core.Local;
 import org.springframework.jdbc.core.BeanPropertyRowMapper;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Repository;
 
-import java.sql.Date;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,10 +31,7 @@ public class TurmaDao {
      */
     public List<TurmaDto> findTurmaByCurso(int id_curso){
         String  sql ="SELECT "+
-                "t.inicio, "+
-                "t.fim, "+
-                "t.local, "+
-                "t.curso, "+
+                "t.* "+
                 "COUNT(tp.funcionario) AS participantes "+
                 "FROM turma t "+
                 "LEFT JOIN turma_participante tp ON t.codigo = tp.turma "+
@@ -51,11 +46,12 @@ public class TurmaDao {
      *
      * @param inicio Data de inicio da turma.
      * @param fim Data de fim da turma.
+     * @param id_curso id do curso.
      * @return Lista de objetos FuncionarioModel correspondentes aos participantes.
      */
-    public List<FuncionarioModel> findByTurma(LocalDate inicio, LocalDate fim){
-        String  sql = "SELECT f.* FROM funcionario f JOIN turma_participante tp ON f.codigo = tp.funcionario JOIN turma t ON tp.turma = t.codigo WHERE t.inicio = ? AND t.fim = ? ORDER BY f.nome";
-        return jdbcTemplate.query(sql,new BeanPropertyRowMapper<>(FuncionarioModel.class),inicio,fim);
+    public List<FuncionarioModel> findByTurma( int id_curso, LocalDate inicio, LocalDate fim){
+        String  sql = "SELECT f.* FROM funcionario f JOIN turma_participante tp ON f.codigo = tp.funcionario JOIN turma t ON tp.turma = t.codigo WHERE t.inicio = ? AND t.fim = ? AND t.curso = ? ORDER BY f.nome";
+        return jdbcTemplate.query(sql,new BeanPropertyRowMapper<>(FuncionarioModel.class),inicio,fim,id_curso);
     }
 
     /**

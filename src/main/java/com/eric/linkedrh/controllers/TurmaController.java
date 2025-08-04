@@ -13,7 +13,6 @@ import java.util.List;
 
 /**
  * Controller responsável pelo CRUD das turmas de um curso.
- *
  * Permite consultar turmas de um curso, gerenciar turmas específicas e seus participantes.
  */
 @RestController
@@ -41,9 +40,9 @@ public class TurmaController {
      * @param fim  Data d fim da turma
      * @return Lista de FuncionarioDto representando os participantes da turma.
      */
-    @GetMapping("/turma/{inicio}/{fim}/funcionario")
-    public List<FuncionarioDto>getFuncionarioByTurma(@PathVariable("inicio") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate inicio,@PathVariable("fim") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fim){
-        return this.turmaService.getFuncionariosByTurma(inicio,fim);
+    @GetMapping("{id}/turma/{inicio}/{fim}/funcionario")
+    public List<FuncionarioDto>getFuncionarioByTurma(@PathVariable("id") int id,@PathVariable("inicio") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate inicio,@PathVariable("fim") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate fim){
+        return this.turmaService.getFuncionariosByTurma(id,inicio,fim);
     }
     /**
      * Cria uma nova turma associada a um curso.
@@ -62,7 +61,7 @@ public class TurmaController {
      * Atualiza os dados de uma turma existente.
      *
      * @param id_turma Identificador da turma a ser atualizada.
-     * @param turmaDto Dados atualizados da turma.
+     * @param turmaPostDto Dados atualizados da turma.
      * @return Mensagem de sucesso após a atualização.
      */
     @PatchMapping("/turma/{id_turma}/atualiza")

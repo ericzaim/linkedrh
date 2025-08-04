@@ -3,7 +3,6 @@ package com.eric.linkedrh.dtos;
 import lombok.*;
 
 import java.time.LocalDate;
-import java.time.LocalTime;
 
 @AllArgsConstructor
 @NoArgsConstructor
