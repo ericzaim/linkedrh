@@ -43,7 +43,7 @@ Fazer uma API REST para atender operações básicas do controle de treinamento 
   { "curso":String,<br> "local":String,<br> "inicio":LocalDate,<br> "fim":LocalDate };
 
 #### Busca participantes de uma turma
-```GET /curso/{id}/turma/{inicio}/{fim}/funcionario``` Recebe as datas de inicio e fim da turma e retorna os funcionarios da turma
+- ```GET /curso/{id}/turma/{inicio}/{fim}/funcionario``` Recebe as datas de inicio e fim da turma e retorna os funcionarios da turma
 {"nome":String, <br>"cpf": String,<br> "nascimento": LocalDate,<br> "cargo": String, <br>"admissao":LocalDate,<br> "status":boolean }
 
 #### Inclusão de turmas
